@@ -21,10 +21,10 @@ length = len(trim(phrase))
 !  with the same length of the original one (ASCII code 32 to 125)
 ! We will call each element of the population DNA
 
-call random_number(rDNA)
 
 ! 19 is the length. Change to allocatable arrays later
 do j=1,20
+call random_number(rDNA)
 iDNA = 32 + floor((125+1-32)*rDNA)
   do i=1,19
     if (i==1) then
