@@ -6,12 +6,14 @@ character(100) :: phrase
 integer :: length
 integer :: seed
 integer :: pop_size
-integer :: i,j
+integer :: i,j,k
 real :: rDNA(19)
 integer :: iDNA(19)
 character(19), dimension(20) :: sDNA    ! Array of 20 strings with length 19
 integer, dimension(20) :: fitness       ! It must have the same size of population
-real, dimension(20) :: norm_fit      ! It must have the same size of population
+real, dimension(20) :: norm_fit         ! It must have the same size of population
+integer, dimension(100) :: pool         ! Mating pool with size 100 to represent 100%
+integer :: parentA, parentB
 
 
 ! Variables initialization
@@ -20,6 +22,7 @@ pop_size = 20
 seed = 12345
 length = len(trim(phrase))
 fitness = 0
+pool = 0
 
 
 !!!!!!!!!!!!!!!!! Creation of random population !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -64,12 +67,24 @@ enddo
 !  to have a relative fitness to each element. Then, this relative fitness will
 !  give us the probability to chose the parents.
 
-! Normalizing the fitness score
+! Normalizing the fitness score and populating the probabilistic mating pool
+k=1
+i=1
 do j=1,pop_size
   norm_fit(j) = real(fitness(j))/sum(fitness)
   if (norm_fit(j) .ne. 0.0) then
     print*, j, norm_fit(j)
+    do while (k <= floor(norm_fit(j)*100))
+      pool(i) = j
+      k = k+1
+      i = i+1
+    enddo
+    k = 1
   endif
 enddo
+!print*, pool
+
+
+  
 
 end program
