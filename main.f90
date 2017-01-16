@@ -18,7 +18,9 @@ integer, dimension(:), allocatable :: pool         ! Mating pool with size 100 t
 integer :: parentA, parentB
 character(100) :: child
 integer :: generation
+real :: start, finish
 
+call cpu_time(start)
 
 ! Variables initialization
 phrase = "To be or not to be. That is the question! (William Shakespeare)"
@@ -86,6 +88,9 @@ do
       print*
       write(*,'(A12,A100,A8)') "generation", "phrase", "fitness"
       write(*,'(I12,A100,F8.2)') generation, trim(sDNA(j)), fitness(j)
+      call cpu_time(finish)
+      print*
+      write(*,'(A20,F5.2,A2)') 'Time elapsed:', finish-start, " s"
       print*
       stop 
     endif
@@ -178,5 +183,6 @@ do
 
   fitness = 0.0
 enddo  ! END OF MAIN LOOP
+
 
 end program
