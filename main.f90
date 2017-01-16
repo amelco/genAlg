@@ -23,7 +23,7 @@ real :: start, finish
 call cpu_time(start)
 
 ! Variables initialization
-phrase = "To be or not to be. That is the question! (William Shakespeare)"
+phrase = "To be or not to be. That is the question! (William Shakespeare, book Hamlet - act III, scene I)"
 pop_size = 100
 mutation_rate = 0.0002
 seed = 12345.6
@@ -90,7 +90,7 @@ do
       write(*,'(I12,A100,F8.2)') generation, trim(sDNA(j)), fitness(j)
       call cpu_time(finish)
       print*
-      write(*,'(A20,F5.2,A2)') 'Time elapsed:', finish-start, " s"
+      write(*,'(A20,F8.2,A2)') 'Time elapsed:', finish-start, " s"
       print*
       stop 
     endif
