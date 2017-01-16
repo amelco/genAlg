@@ -2,23 +2,24 @@ program genAlg
 implicit none
 
 ! Declaration of variables
-character(100) :: phrase
-integer :: length
-real :: seed
-integer :: pop_size
-real :: mutation_rate
-integer :: i,j,k
-real, allocatable :: rDNA(:)
-integer, allocatable :: iDNA(:)
-character(:), dimension(:), allocatable :: sDNA    ! Array of 20 strings with length 19
-integer :: score
-real, dimension(:), allocatable :: fitness       ! It must have the same size of population
-real, dimension(:), allocatable :: norm_fit         ! It must have the same size of population
-integer, dimension(:), allocatable :: pool         ! Mating pool with size 100 to represent 100%
-integer :: parentA, parentB
-character(100) :: child
-integer :: generation
-real :: start, finish
+integer, parameter :: maxLen = 100    ! maximum length of the phrase
+character(maxLen) :: phrase   ! Phrase to be found
+integer :: length             ! Length of the phrase
+real :: seed                  ! seed to be used in some random generation
+integer :: pop_size           ! size of the population
+real :: mutation_rate         ! mutation rate
+integer :: i,j,k              ! counters
+real, allocatable :: rDNA(:)      ! real DNAs
+integer, allocatable :: iDNA(:)   ! integer DNAs
+character(:), dimension(:), allocatable :: sDNA    ! string DNAs (Population)
+integer :: score              ! score to calculate fitness
+real, dimension(:), allocatable :: fitness        
+real, dimension(:), allocatable :: norm_fit      ! normalized fitness
+integer, dimension(:), allocatable :: pool       ! Mating pool with size 100 to represent 100%
+integer :: parentA, parentB   ! parents
+character(maxLen) :: child    ! child
+integer :: generation         ! generation
+real :: start, finish         ! to compute processing time
 
 call cpu_time(start)
 
@@ -49,7 +50,6 @@ call random_seed()
 ! We will call each element of the population DNA (sDNA for string DNA)
 ! The population will have the size of 20
 
-! Maximum length of phrase is 100. Change to allocatable arrays later
 do j=1,pop_size
 call random_number(rDNA)
 iDNA = 32 + floor((125+1-32)*rDNA)
@@ -65,11 +65,6 @@ enddo
 
 !!! HERE THE LOOP BEGINS
 do
-  ! SHOW ON SCREEN
-  !call system('clear')
-  !print*, generation, sDNA(maxloc(fitness)), maxval(fitness)
-
-
   !!!!!!!!!!!!!!!!! Selection of the fittest !!!!!!!!!!!!!!!!!!!!!!!!!
   ! Now we have to calculate the fitness of each element of the population (DNA)
   ! It is generally a mathematical function, but in this case it will be
@@ -84,6 +79,7 @@ do
     enddo
     fitness(j) = (1.0*score)/(1.0*length)
     !print*, j, fitness(j), score, length
+    ! Verify if there is a phrase with fitness 1 (100% correct)
     if (fitness(j) == 1.0 .or. trim(sDNA(j)) == trim(phrase)) then
       print*
       write(*,'(A12,A100,A8)') "generation", "phrase", "fitness"
@@ -92,6 +88,7 @@ do
       print*
       write(*,'(A20,F8.2,A2)') 'Time elapsed:', finish-start, " s"
       print*
+      ! Exit program
       stop 
     endif
   enddo
@@ -109,9 +106,7 @@ do
     norm_fit(j) = fitness(j)/sum(fitness)
 !    print*, j, norm_fit(j), floor(norm_fit(j)*100)
     if (norm_fit(j) .ne. 0.0) then
-!    if (fitness(j) .ne. 0.0) then
       do while (k <= floor(norm_fit(j)*100))
-!      do while (k <= floor(fitness(j)*100))
         pool(i) = j
         k = k+1
         i = i+1
@@ -156,7 +151,6 @@ do
       if (seed < mutation_rate) then
         call random_number(seed)
         child(i:i) = char(32 + floor((125+1-32)*seed))
-        !print*, 'mutation'
       endif
     enddo
   
@@ -170,18 +164,8 @@ do
   write(*,'(A100,F8.2)') sDNA(maxloc(fitness)), maxval(fitness)
 
   generation = generation + 1
-
-  ! Verify if there is a phrase with fitness 1 (100% correct)
-!  do j=1,pop_size
-!    if (fitness(j) == 1.0) then
-!      print*
-!      print*, generation, j, sDNA(j)
-!      print*
-!      stop 
-!    endif
-!  enddo
-
   fitness = 0.0
+
 enddo  ! END OF MAIN LOOP
 
 
