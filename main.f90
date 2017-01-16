@@ -21,9 +21,9 @@ integer :: generation
 
 
 ! Variables initialization
-phrase = "To be or not to be. That is the question!"
+phrase = "To be or not to be. That is the question! (William Shakespeare)"
 pop_size = 100
-mutation_rate = 0.002
+mutation_rate = 0.0002
 seed = 12345.6
 length = len(trim(phrase))
 fitness = 0.0
@@ -84,7 +84,8 @@ do
     !print*, j, fitness(j), score, length
     if (fitness(j) == 1.0 .or. trim(sDNA(j)) == trim(phrase)) then
       print*
-      print*, generation, j, sDNA(j), fitness(j)
+      write(*,'(A12,A100,A8)') "generation", "phrase", "fitness"
+      write(*,'(I12,A100,F8.2)') generation, trim(sDNA(j)), fitness(j)
       print*
       stop 
     endif
@@ -161,7 +162,7 @@ do
     !print*, j, sDNA(j), fitness(j)
   enddo
 
-  print*, sDNA(maxloc(fitness)), maxval(fitness)
+  write(*,'(A100,F8.2)') sDNA(maxloc(fitness)), maxval(fitness)
 
   generation = generation + 1
 
